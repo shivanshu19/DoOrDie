@@ -5,11 +5,15 @@ pipeline {
             args '-v /root/.nuget/packages:/root/.nuget/packages'
         }
     }
+    environment {
+        DOTNET_CLI_HOME = '/tmp/dotnet-home'
+    }
     stages {
-        stage('Build') { 
+        stage('Build') {
             steps {
-                sh 'dotnet restore' 
-                sh 'dotnet build --no-restore' 
+                sh 'mkdir -p /tmp/dotnet-home'
+                sh 'dotnet restore'
+                sh 'dotnet build --no-restore'
             }
         }
     }
