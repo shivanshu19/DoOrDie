@@ -18,7 +18,7 @@ pipeline {
         }
 		stage('Deliver') {
             steps {
-                sh 'dotnet publish DoOrDie --no-restore -o published'
+                sh 'dotnet publish DoOrDie/DoOrDie.csproj --no-restore -o published'
             }
             post {
                 success {
