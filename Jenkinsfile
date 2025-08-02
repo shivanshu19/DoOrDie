@@ -17,4 +17,14 @@ pipeline {
             }
         }
     }
+	stage('Deliver') {
+            steps {
+                sh 'dotnet publish DoOrDie --no-restore -o published'
+            }
+            post {
+                success {
+                    archiveArtifacts 'published/*.*'
+                }
+            }
+        }
 }
