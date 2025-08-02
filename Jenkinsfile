@@ -16,8 +16,7 @@ pipeline {
                 sh 'dotnet build --no-restore'
             }
         }
-    }
-	stage('Deliver') {
+		stage('Deliver') {
             steps {
                 sh 'dotnet publish DoOrDie --no-restore -o published'
             }
@@ -27,4 +26,6 @@ pipeline {
                 }
             }
         }
+    }
+	
 }
