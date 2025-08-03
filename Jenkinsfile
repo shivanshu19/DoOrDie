@@ -28,9 +28,7 @@ pipeline {
         stage('Run new container') {
             steps {
                 script {
-                    sh """
-                    docker run -d --name doordie -p 80:80 $IMAGE_NAME
-                    """
+                   sh 'docker run -d -p 80:80 --name doordie shivanshu19/doordie:latest'
                 }
             }
         }
