@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "shivanshu19/DoOrDie:latest"
+        IMAGE_NAME = "shivanshu19/doordie:latest"
     }
 
     stages {
