@@ -1,31 +1,38 @@
 pipeline {
-    agent {
-        docker {
-            image 'mcr.microsoft.com/dotnet/sdk:9.0'
-            args '-v /root/.nuget/packages:/root/.nuget/packages'
-        }
-    }
+    agent any
+
     environment {
-        DOTNET_CLI_HOME = '/tmp/dotnet-home'
+        IMAGE_NAME = "shivanshu19/DoOrDie:latest"
     }
+
     stages {
-        stage('Build') {
+        stage('Pull latest Docker image') {
             steps {
-                sh 'mkdir -p /tmp/dotnet-home'
-                sh 'dotnet restore'
-                sh 'dotnet build --no-restore'
+                script {
+                    sh "docker pull $IMAGE_NAME"
+                }
             }
         }
-		stage('Deliver') {
+
+        stage('Stop existing container') {
             steps {
-                sh 'dotnet publish DoOrDie.csproj --no-restore -o published'
+                script {
+                    sh """
+                    docker stop DoOrDie || true
+                    docker rm DoOrDie || true
+                    """
+                }
             }
-            post {
-                success {
-                    archiveArtifacts 'published/*.*'
+        }
+
+        stage('Run new container') {
+            steps {
+                script {
+                    sh """
+                    docker run -d --name DoOrDie -p 80:80 $IMAGE_NAME
+                    """
                 }
             }
         }
     }
-	
 }

@@ -16,6 +16,10 @@ COPY ["DoOrDie.csproj", "."]
 RUN dotnet restore "./DoOrDie.csproj"
 COPY . .
 WORKDIR "/src/."
+# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /app
+
 RUN dotnet build "./DoOrDie.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
