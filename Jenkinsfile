@@ -18,8 +18,8 @@ pipeline {
             steps {
                 script {
                     sh """
-                    docker stop DoOrDie || true
-                    docker rm DoOrDie || true
+                    docker stop doordie || true
+                    docker rm doordie || true
                     """
                 }
             }
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                    docker run -d --name DoOrDie -p 80:80 $IMAGE_NAME
+                    docker run -d --name doordie -p 80:80 $IMAGE_NAME
                     """
                 }
             }
