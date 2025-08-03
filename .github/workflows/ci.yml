@@ -39,18 +39,22 @@ jobs:
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/doordie:latest
 
     - name: Get Jenkins crumb
-      id: get_crumb
       env:
-       JENKINS_URL: ${{ secrets.JENKINS_URL }}
+        JENKINS_URL: ${{ secrets.JENKINS_URL }}
+        JENKINS_USER: ${{ secrets.JENKINS_USER }}
+        JENKINS_API_TOKEN: ${{ secrets.JENKINS_API_TOKEN }}
       run: |
-            CRUMB=$(curl -s "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)")
+            CRUMB=$(curl -u "$JENKINS_USER:$JENKINS_API_TOKEN" -s "$JENKINS_URL/crumbIssuer/api/xml?xpath=concat(//crumbRequestField,\":\",//crumb)")
             echo "CRUMB=$CRUMB" >> $GITHUB_ENV
+
 
     - name: Trigger Jenkins Job
       env:
         JENKINS_URL: ${{ secrets.JENKINS_URL }}
-        JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
+        JENKINS_USER: ${{ secrets.JENKINS_USER }}
         JENKINS_API_TOKEN: ${{ secrets.JENKINS_API_TOKEN }}
+        JENKINS_TOKEN: ${{ secrets.JENKINS_TOKEN }}
         CRUMB: ${{ env.CRUMB }}
       run: |
-            curl -X POST "$JENKINS_URL/job/deploy-dotnet-api/build?token=$JENKINS_TOKEN" -H "$CRUMB"
+           curl -u "$JENKINS_USER:$JENKINS_API_TOKEN" -X POST "$JENKINS_URL/job/deploy-dotnet-api/build?token=$JENKINS_TOKEN" -H "$CRUMB"
+
